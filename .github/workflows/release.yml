@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows:
+      - Test
+    branches:
+      - main
+    types:
+      - completed
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          extra_plugins: |
+            @semantic-release/changelog@6.0.2
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.SCRIBD_GITHUB_GENERIC_TOKEN }}
+
+      - name: Send notification
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: scribd/job-notification@main
+        with:
+          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN }}
+          channel: service-foundations-release
+          message: <https://github.com/${{ github.repository }}/tree/v${{ steps.semantic.outputs.new_release_version }}|Released version v${{ steps.semantic.outputs.new_release_version }}>
