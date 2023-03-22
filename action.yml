@@ -1,0 +1,100 @@
+name: job-notification
+description: A GitHub Action for sending job notifications
+inputs:
+  repository:
+    description: |
+      Name of the repository (e.g scribd/job-notification)
+      Useful for sending notifications on behalf of another repository.
+    required: true
+    default: ${{ github.repository }}
+  token:
+    description: Slack token to send the notification via "gitscribd" app.
+    required: true
+  channel:
+    description: The Slack channel name for receiving the notification
+    required: true
+  message:
+    description: Customize the notification message.
+
+runs:
+  using: composite
+  steps:
+    - name: Set fields
+      shell: bash
+      if: always()
+      id: fields
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "emoji=large_green_square" >> $GITHUB_OUTPUT
+          echo "color=good" >> $GITHUB_OUTPUT
+        elif [ "${{ job.status }}" = "failure" ]; then
+          echo "emoji=large_red_square" >> $GITHUB_OUTPUT
+          echo "color=danger" >> $GITHUB_OUTPUT
+        else
+          echo "emoji=large_orange_square" >> $GITHUB_OUTPUT
+          echo "color=warning" >> $GITHUB_OUTPUT
+        fi
+
+        if [ ! -z "${{ inputs.message }}" ]; then 
+          message="${{ inputs.message }}"
+        elif [ ! -z "${{ github.event.head_commit.message }}" ]; then 
+          # get commit message from `push` trigger
+          commit_message=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+          message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
+        elif git rev-parse --is-inside-git-dir > /dev/null 2>&1; then  
+          # get commit message from the current git directory to support `workflow_dispatch` trigger
+          commit_message=$(git log --format=%B -n 1 | head -n 1)
+          message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
+        else
+          commit_message=Link to the latest commit in the repository
+          message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
+        fi
+        echo "message=$message" >> $GITHUB_OUTPUT
+
+        author=${{ github.event.pusher.name }} # context from `push` trigger
+        author=${author:-${{ github.event.sender.login }}} # context from `workflow_dispatch` trigger
+        echo "author=$author" >> $GITHUB_OUTPUT
+
+    - name: Send notification
+      if: always()
+      uses: slackapi/slack-github-action@v1.23.0
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.token }}
+      with:
+        channel-id: ${{ inputs.channel }}
+        payload: |
+          {
+            "text": ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ job.status }}*",
+            "attachments": [
+              {
+                "color": "${{ steps.fields.outputs.color }}",
+                "fields": [
+                  {
+                    "title": "Repository",
+                    "value": "<https://github.com/${{ inputs.repository }}|${{ inputs.repository }}>",
+                    "short": true
+                  },
+                  {
+                    "title": "Environment",
+                    "value": "${{ github.ref_name == 'main' && 'production' || github.ref_name }}",
+                    "short": true
+                  },
+                  {
+                    "title": "Author",
+                    "value": "<https://github.com/${{ steps.fields.outputs.author }}|${{ steps.fields.outputs.author }}>",
+                    "short": true
+                  },
+                  {
+                    "title": "Job",
+                    "value": "${{ github.job }}",
+                    "short": true
+                  },
+                  {
+                    "title": "Commit Message",
+                    "value": "${{ steps.fields.outputs.message }}",
+                    "short": false
+                  }
+                ]
+              }
+            ]
+          }
