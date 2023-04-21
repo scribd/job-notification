@@ -1,9 +1,43 @@
 name: CI
 
-on: push
+on: [push, workflow_dispatch]
 
 jobs:
-  shared-workflow:
-    uses: scribd/github-actions-shared-workflows/.github/workflows/shared-workflow.yml@main
-    secrets:
-      github_access_token: ${{ secrets.SCRIBD_GITHUB_GENERIC_TOKEN }}
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run action
+        uses: ./
+        with:
+          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
+          channel: test-release-notification
+  test-custom-message:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run action
+        uses: ./
+        with:
+          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
+          channel: test-release-notification
+          message: <https://scribd.com|Custom message>
+  test-overwrite-repository:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run action
+        uses: ./
+        with:
+          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
+          channel: test-release-notification
+          repository: scribd/node-chassis
