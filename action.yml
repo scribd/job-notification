@@ -35,11 +35,11 @@ runs:
           echo "color=warning" >> $GITHUB_OUTPUT
         fi
 
-        if [ ! -z "${{ inputs.message }}" ]; then 
-          message="${{ inputs.message }}"
-        elif [ ! -z "${{ github.event.head_commit.message }}" ]; then 
+        if [ ! -z '${{ inputs.message }}' ]; then 
+          message='${{ inputs.message }}'
+        elif [ ! -z '${{ github.event.head_commit.message }}' ]; then 
           # get commit message from `push` trigger
-          commit_message=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+          commit_message=$(echo '${{ github.event.head_commit.message }}' | head -n 1)
           message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         elif git rev-parse --is-inside-git-dir > /dev/null 2>&1; then  
           # get commit message from the current git directory to support `workflow_dispatch` trigger
@@ -91,7 +91,7 @@ runs:
                   },
                   {
                     "title": "Commit Message",
-                    "value": "${{ steps.fields.outputs.message }}",
+                    "value": ${{ toJSON(steps.fields.outputs.message) }},
                     "short": false
                   }
                 ]

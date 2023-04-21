@@ -28,6 +28,19 @@ jobs:
           token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
           channel: test-release-notification
           message: <https://scribd.com|Custom message>
+  test-custom-message-with-special-characters:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run action
+        uses: ./
+        with:
+          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
+          channel: test-release-notification
+          message: <https://scribd.com|Special characters + "quotes" + `backtick`>
   test-overwrite-repository:
     runs-on: ubuntu-22.04
     steps:
