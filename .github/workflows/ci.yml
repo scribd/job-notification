@@ -54,3 +54,14 @@ jobs:
           token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
           channel: test-release-notification
           repository: scribd/node-chassis
+
+  codeowners:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: GitHub CODEOWNERS Validator
+        uses: mszostok/codeowners-validator@v0.7.4
+        with:
+          checks: "files,duppatterns,syntax"
