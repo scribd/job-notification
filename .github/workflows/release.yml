@@ -3,7 +3,7 @@ name: Release
 on:
   workflow_run:
     workflows:
-      - Test
+      - CI
     branches:
       - main
     types:
