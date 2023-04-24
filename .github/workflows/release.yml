@@ -27,12 +27,12 @@ jobs:
             @semantic-release/changelog@6.0.2
             @semantic-release/git@10.0.1
         env:
-          GITHUB_TOKEN: ${{ secrets.SCRIBD_GITHUB_GENERIC_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Send notification
         if: steps.semantic.outputs.new_release_published == 'true'
         uses: scribd/job-notification@main
         with:
-          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN }}
+          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
           channel: service-foundations-release
           message: <https://github.com/${{ github.repository }}/tree/v${{ steps.semantic.outputs.new_release_version }}|Released version v${{ steps.semantic.outputs.new_release_version }}>
