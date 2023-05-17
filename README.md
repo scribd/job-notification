@@ -45,7 +45,7 @@ steps:
       message: <https://github.com/${{ github.repository }}|Released update>
 ```
 
-### Overwrite repository link
+### Overwrite repository and status
 
 By default, the notification links to the repository that triggers the job. You can overwrite that using the `repository` field, which is useful for managing the release for multiple repositories in one place. See [scribd-api-proto](https://github.com/scribd/scribd-api-proto) for example.
 
@@ -59,6 +59,17 @@ steps:
       token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN }}
       channel: test-release-notification
       repository: scribd/scribd-api-ruby
+```
+Additionally, `status` can be set explicitly to `success`, `failure` or another custom value to override the default behavior of using status of the job calling this action.
+
+```yaml
+steps:
+  - name: Send notification
+    uses: scribd/job-notification@main
+    with:
+      token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN }}
+      channel: test-release-notification
+      status: warning
 ```
 
 ## Development
