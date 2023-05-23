@@ -54,6 +54,19 @@ jobs:
           token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
           channel: test-release-notification
           repository: scribd/node-chassis
+  test-overwrite-status:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SCRIBD_GITHUB_RELEASE_TOKEN }}
+      - name: Run action
+        uses: ./
+        with:
+          token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
+          channel: test-release-notification
+          status: failure
 
   codeowners:
     runs-on: ubuntu-22.04
