@@ -5,7 +5,7 @@ inputs:
     description: |
       Name of the repository (e.g scribd/job-notification)
       Useful for sending notifications on behalf of another repository.
-    required: true
+    required: false
     default: ${{ github.repository }}
   token:
     description: Slack token to send the notification via "gitscribd" app.
@@ -13,6 +13,10 @@ inputs:
   channel:
     description: The Slack channel name for receiving the notification
     required: true
+  status:
+    description: Customize the notification status to be "success", "failure" or a custom value.
+    required: false
+    default: ${{ job.status }}
   message:
     description: Customize the notification message.
 
@@ -24,10 +28,10 @@ runs:
       if: always()
       id: fields
       run: |
-        if [ "${{ job.status }}" = "success" ]; then
+        if [ "${{ inputs.status }}" = "success" ]; then
           echo "emoji=large_green_square" >> $GITHUB_OUTPUT
           echo "color=good" >> $GITHUB_OUTPUT
-        elif [ "${{ job.status }}" = "failure" ]; then
+        elif [ "${{ inputs.status }}" = "failure" ]; then
           echo "emoji=large_red_square" >> $GITHUB_OUTPUT
           echo "color=danger" >> $GITHUB_OUTPUT
         else
@@ -64,7 +68,7 @@ runs:
         channel-id: ${{ inputs.channel }}
         payload: |
           {
-            "text": ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ job.status }}*",
+            "text": ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ inputs.status }}*",
             "attachments": [
               {
                 "color": "${{ steps.fields.outputs.color }}",
