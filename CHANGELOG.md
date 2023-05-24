@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/scribd/job-notification/compare/v1.0.1...v1.1.0) (2023-05-24)
+
+
+### Features
+
+* allow passing status as optional input ([0461f44](https://github.com/scribd/job-notification/commit/0461f449db1c0fb0f68ba175efaf3d119c979bf4))
+
 ## [1.0.1](https://github.com/scribd/job-notification/compare/v1.0.0...v1.0.1) (2023-05-08)
 
 
