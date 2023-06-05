@@ -50,7 +50,7 @@ runs:
           commit_message=$(git log --format=%B -n 1 | head -n 1)
           message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         else
-          commit_message=Link to the latest commit in the repository
+          commit_message="Link to the latest commit in the repository"
           message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         fi
         echo "message=$message" >> $GITHUB_OUTPUT
