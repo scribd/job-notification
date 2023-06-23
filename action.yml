@@ -17,6 +17,10 @@ inputs:
     description: Customize the notification status to be "success", "failure" or a custom value.
     required: false
     default: ${{ job.status }}
+  environment:
+    description: Customize the environment to be something other than branch name
+    required: false
+    default: ${{ github.ref_name }}
   message:
     description: Customize the notification message.
 
@@ -79,8 +83,8 @@ runs:
                     "short": true
                   },
                   {
-                    "title": "Environment",
-                    "value": "${{ github.ref_name == 'main' && 'production' || github.ref_name }}",
+                    "title": "Environment/Branch",
+                    "value": "${{ inputs.environment || github.ref_name }}",
                     "short": true
                   },
                   {
