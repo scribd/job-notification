@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/scribd/job-notification/compare/v1.1.0...v1.2.0) (2023-06-23)
+
+
+### Features
+
+* allow passing environment as optional input ([183553a](https://github.com/scribd/job-notification/commit/183553ad9c32c3d7710709d30e82d76261643551))
+
 # [1.1.0](https://github.com/scribd/job-notification/compare/v1.0.1...v1.1.0) (2023-05-24)
 
 
