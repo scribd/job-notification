@@ -12,6 +12,7 @@ A GitHub Action for sending job notifications
   - [Overwrite repository link](#overwrite-repository-link)
 - [Development](#development)
   - [Testing](#testing)
+  - [Commit messages](#commit-messages)
 - [Maintainers](#maintainers)
 
 ## Quick Start
@@ -77,6 +78,10 @@ steps:
 ### Testing
 
 You can test your changes by pushing them to a branch, which will trigger the [test](.github/workflows/test.yml) workflow to send the notifications to the [test-release-notification](https://scribd.slack.com/archives/C04U68KR6CU) channel on Slack.
+
+### Commit messages
+
+Please follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [Angular commit message guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines) for writing commit messages.
 
 ## Maintainers
 
