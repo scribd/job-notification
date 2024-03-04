@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/scribd/job-notification/compare/v1.2.0...v1.3.0) (2024-03-04)
+
+
+### Features
+
+* update actions/checkout to v4 ([de7f5e8](https://github.com/scribd/job-notification/commit/de7f5e8b91507fc393f808c6d1f7feeb826506dd))
+* update slack-github-action to v1.25.0 ([4c68b13](https://github.com/scribd/job-notification/commit/4c68b1376b4d2e8de9a8f5215bb4d49e315ecbf4))
+
 # [1.2.0](https://github.com/scribd/job-notification/compare/v1.1.0...v1.2.0) (2023-06-23)
 
 
