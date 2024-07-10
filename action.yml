@@ -33,6 +33,7 @@ runs:
       id: fields
       env:
         commit_massage: ${{ github.event.head_commit.message }}
+        test: Test
       run: |
         if [ "${{ inputs.status }}" = "success" ]; then
           echo "emoji=large_green_square" >> $GITHUB_OUTPUT
