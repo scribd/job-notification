@@ -44,7 +44,7 @@ runs:
         fi
 
         if [ ! -z '${{ inputs.message }}' ]; then 
-          message='${{ inputs.message }}'
+          message='${{ toJSON(inputs.message) }}'
         elif [ ! -z '${{ toJSON(github.event.head_commit.message) }}' ]; then 
           # get commit message from `push` trigger
           commit_message=$(echo '${{ toJSON(github.event.head_commit.message) }}' | head -n 1)
