@@ -40,7 +40,7 @@ jobs:
         with:
           token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
           channel: test-release-notification
-          message: <https://scribd.com|Special characters + "quotes" + `backtick`>
+          message: <https://scribd.com|Special characters + "quotes" + `backtick` + Don't fail on apostrophes>
   test-overwrite-repository:
     runs-on: ubuntu-22.04
     steps:
