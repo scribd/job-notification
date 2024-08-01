@@ -57,7 +57,11 @@ runs:
           commit_message="Link to the latest commit in the repository"
           message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         fi
-        echo "message=$message" >> $GITHUB_OUTPUT
+
+        : # This format allows for multi-line message inputs
+        echo 'MESSAGE<<EOF' >> $GITHUB_OUTPUT
+        $message >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
 
         author=${{ github.event.pusher.name }} # context from `push` trigger
         author=${author:-${{ github.event.sender.login }}} # context from `workflow_dispatch` trigger
@@ -98,7 +102,7 @@ runs:
                     "short": true
                   },
                   {
-                    "title": "Commit Message",
+                    "title": "Message",
                     "value": ${{ toJSON(steps.fields.outputs.message) }},
                     "short": false
                   }
