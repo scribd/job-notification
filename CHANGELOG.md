@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/scribd/job-notification/compare/v1.3.0...v1.3.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* single quote(') in commit_message would lead to failure ([a41018b](https://github.com/scribd/job-notification/commit/a41018bdc7023ba96dc2219085926aa2fb19b2c5))
+
 # [1.3.0](https://github.com/scribd/job-notification/compare/v1.2.0...v1.3.0) (2024-03-04)
 
 
