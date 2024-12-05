@@ -13,6 +13,10 @@ inputs:
   channel:
     description: The Slack channel name for receiving the notification
     required: true
+  slack-ts:
+    description: The timestamp of the message to update
+    required: false
+    default: ''
   status:
     description: Customize the notification status to be "success", "failure" or a custom value.
     required: false
@@ -60,7 +64,8 @@ runs:
           commit_message="Link to the latest commit in the repository"
           message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         fi
-        echo "message=$message" >> $GITHUB_OUTPUT
+        sanitized_message=$(echo "$message" | sed "s/'/\\\'/g")
+        echo "sanitized_message=$sanitized_message" >> $GITHUB_OUTPUT
 
         author=${{ github.event.pusher.name }} # context from `push` trigger
         author=${author:-${{ github.event.sender.login }}} # context from `workflow_dispatch` trigger
@@ -68,44 +73,51 @@ runs:
 
     - name: Send notification
       if: always()
-      uses: slackapi/slack-github-action@v1.25.0
-      env:
-        SLACK_BOT_TOKEN: ${{ inputs.token }}
+      uses: archive/github-actions-slack@v2.9.0
       with:
-        channel-id: ${{ inputs.channel }}
-        payload: |
-          {
-            "text": ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ inputs.status }}*",
-            "attachments": [
-              {
-                "color": "${{ steps.fields.outputs.color }}",
-                "fields": [
-                  {
-                    "title": "Repository",
-                    "value": "<https://github.com/${{ inputs.repository }}|${{ inputs.repository }}>",
-                    "short": true
-                  },
-                  {
-                    "title": "Environment/Branch",
-                    "value": "${{ inputs.environment || github.ref_name }}",
-                    "short": true
-                  },
-                  {
-                    "title": "Author",
-                    "value": "<https://github.com/${{ steps.fields.outputs.author }}|${{ steps.fields.outputs.author }}>",
-                    "short": true
-                  },
-                  {
-                    "title": "Job",
-                    "value": "${{ github.job }}",
-                    "short": true
-                  },
-                  {
-                    "title": "Commit Message",
-                    "value": ${{ toJSON(steps.fields.outputs.message) }},
-                    "short": false
-                  }
-                ]
+        slack-channel: ${{ inputs.channel }}
+        slack-bot-user-oauth-access-token: ${{ inputs.token }}
+        slack-optional-thread_ts: ${{ inputs.slack-ts }}
+        slack-blocks: >-
+          [
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ inputs.status }}*"
               }
-            ]
-          }
+            },
+            {
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "*Repository*\n<https://github.com/${{ inputs.repository }}|${{ inputs.repository }}>"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Environment/Branch*\n${{ inputs.environment || github.ref_name }}"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "*Author*\n<https://github.com/${{ steps.fields.outputs.author }}|${{ steps.fields.outputs.author }}>"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Job*\n${{ github.job }}"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": '*Commit Message*\n${{ steps.fields.outputs.sanitized_message }}'
+              }
+            }
+          ]
