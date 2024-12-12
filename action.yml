@@ -65,8 +65,10 @@ runs:
           message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         fi
         sanitized_message=$(echo "$message" | sed "s/'/\\\'/g")
+        sanitized_message=$(echo "$sanitized_message" | sed 's/"/\\\"/g')
+        sanitized_message=$(echo "$sanitized_message" | sed 's/`/\\\`/g')
         echo "sanitized_message=$sanitized_message" >> $GITHUB_OUTPUT
-
+        echo "message=$message" >> $GITHUB_OUTPUT
         author=${{ github.event.pusher.name }} # context from `push` trigger
         author=${author:-${{ github.event.sender.login }}} # context from `workflow_dispatch` trigger
         echo "author=$author" >> $GITHUB_OUTPUT
@@ -100,4 +102,4 @@ runs:
             - type: "section"
               text:
                 type: "mrkdwn"
-                text: '*Commit Message*\n${{ steps.fields.outputs.sanitized_message }}'
+                text: "*Commit Message*\n" + '${{ steps.fields.outputs.sanitized_message }}'
