@@ -73,51 +73,31 @@ runs:
 
     - name: Send notification
       if: always()
-      uses: archive/github-actions-slack@v2.9.0
+      uses: slackapi/slack-github-action@v2.0.0
       with:
-        slack-channel: ${{ inputs.channel }}
-        slack-bot-user-oauth-access-token: ${{ inputs.token }}
-        slack-optional-thread_ts: ${{ inputs.slack-ts }}
-        slack-blocks: >-
-          [
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ inputs.status }}*"
-              }
-            },
-            {
-              "type": "section",
-              "fields": [
-                {
-                  "type": "mrkdwn",
-                  "text": "*Repository*\n<https://github.com/${{ inputs.repository }}|${{ inputs.repository }}>"
-                },
-                {
-                  "type": "mrkdwn",
-                  "text": "*Environment/Branch*\n${{ inputs.environment || github.ref_name }}"
-                }
-              ]
-            },
-            {
-              "type": "section",
-              "fields": [
-                {
-                  "type": "mrkdwn",
-                  "text": "*Author*\n<https://github.com/${{ steps.fields.outputs.author }}|${{ steps.fields.outputs.author }}>"
-                },
-                {
-                  "type": "mrkdwn",
-                  "text": "*Job*\n${{ github.job }}"
-                }
-              ]
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": '*Commit Message*\n${{ steps.fields.outputs.sanitized_message }}'
-              }
-            }
-          ]
+        method: chat.postMessage
+        token: ${{ inputs.token }}
+        payload: |
+          channel: ${{ inputs.channel }}
+          thread_ts: ${{ inputs.slack-ts }}
+          blocks:
+            - type: "section"
+              text:
+                type: "mrkdwn"
+                text: ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ inputs.status }}*"
+            - type: "section"
+              fields:
+                - type: "mrkdwn"
+                  text: "*Repository*\n<https://github.com/${{ inputs.repository }}|${{ inputs.repository }}>"
+                - type: "mrkdwn"
+                  text: "*Environment/Branch*\n${{ inputs.environment || github.ref_name }}"
+            - type: "section"
+              fields:
+                - type: "mrkdwn"
+                  text: "*Author*\n<https://github.com/${{ steps.fields.outputs.author }}|${{ steps.fields.outputs.author }}>"
+                - type: "mrkdwn"
+                  text: "*Job*\n${{ github.job }}"
+            - type: "section"
+              text:
+                type: "mrkdwn"
+                text: '*Commit Message*\n${{ steps.fields.outputs.sanitized_message }}'
