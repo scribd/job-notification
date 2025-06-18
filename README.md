@@ -86,3 +86,7 @@ Please follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0
 ## Maintainers
 
 Made with ❤️ by the Service Foundations teams.
+
+## Imagine we added a whole new section
+
+Just to test that a reverted commit resulting in a commit message with newlines and quotes won't break the world
