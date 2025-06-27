@@ -30,7 +30,7 @@ runs:
     - name: Set fields
       env:
         input_message: ${{ inputs.message }}
-        commit_message: ${{ github.event.head_commit.message }}
+        commit_message: "test message"
       shell: bash
       if: always()
       id: fields
