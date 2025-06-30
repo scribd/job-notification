@@ -33,12 +33,12 @@ runs:
       run: |
         {
           echo "commit_message<<EOF"
-          echo "${{ github.event.head_commit.message }}"
+          echo ${{ toJSON(github.event.head_commit.message) }}
           echo "EOF"
         } >> $GITHUB_ENV
         {
           echo "input_message<<EOF"
-          echo "${{ inputs.message }}"
+          echo ${{ toJSON(inputs.message) }}
           echo "EOF"
         } >> $GITHUB_ENV
     - name: Set fields
