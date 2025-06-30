@@ -27,14 +27,26 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Set escaped env variables
+      id: env
+      shell: bash
+      run: |
+        {
+          echo "commit_message<<EOF"
+          echo "${{ github.event.head_commit.message }}"
+          echo "EOF"
+        } >> $GITHUB_ENV
+        {
+          echo "input_message<<EOF"
+          echo "${{ inputs.message }}"
+          echo "EOF"
+        } >> $GITHUB_ENV
     - name: Set fields
-      env:
-        input_message: ${{ inputs.message }}
-        commit_message: "test message"
       shell: bash
       if: always()
       id: fields
       run: |
+        echo 
         if [ "${{ inputs.status }}" = "success" ]; then
           echo "emoji=large_green_square" >> $GITHUB_OUTPUT
           echo "color=good" >> $GITHUB_OUTPUT
@@ -60,7 +72,11 @@ runs:
           commit_message="Link to the latest commit in the repository"
           message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         fi
-        echo "message=$message" >> $GITHUB_OUTPUT
+        {
+          echo "message<<EOF"
+          echo "$message"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
 
         author=${{ github.event.pusher.name }} # context from `push` trigger
         author=${author:-${{ github.event.sender.login }}} # context from `workflow_dispatch` trigger
