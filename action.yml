@@ -28,14 +28,13 @@ runs:
   using: composite
   steps:
     - name: Set fields
+      env:
+        input_message: ${{ inputs.message }}
+        commit_message: ${{ github.event.head_commit.message }}
       shell: bash
       if: always()
       id: fields
-      env:
-        commit_message: ${{ github.event.head_commit.message }}
-        input_message: ${{ inputs.message }}
       run: |
-        echo "Made it here!"
         if [ "${{ inputs.status }}" = "success" ]; then
           echo "emoji=large_green_square" >> $GITHUB_OUTPUT
           echo "color=good" >> $GITHUB_OUTPUT
@@ -59,12 +58,7 @@ runs:
           commit_msg_line="Link to the latest commit in the repository"
           message=$(printf '<https://github.com/%s/commit/%s|%s>' "${{ inputs.repository }}" "${{ github.sha }}" "$commit_msg_line")
         fi
-
-        {
-          echo "message<<EOF"
-          echo "$message"
-          echo "EOF"
-        } >> $GITHUB_OUTPUT
+        echo "message=$message" >> $GITHUB_OUTPUT
 
         author=${{ github.event.pusher.name }} # context from `push` trigger
         author=${author:-${{ github.event.sender.login }}} # context from `workflow_dispatch` trigger

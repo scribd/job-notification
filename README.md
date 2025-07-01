@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/scribd/job-notification/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/scribd/job-notification/actions/workflows/test.yml) [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
-A GitHub Action for sending job notifications.
+A GitHub Action for sending job notifications
 
 ## Table of contents
 
