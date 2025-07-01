@@ -49,11 +49,13 @@ runs:
         if [ ! -z "$input_message" ]; then
           message=$input_message
         elif [ ! -z "$commit_message" ]; then
-          commit_msg_line=$(printf '%s\n' "$commit_message" | head -n 1)
-          message=$(printf '<https://github.com/%s/commit/%s|%s>' "${{ inputs.repository }}" "${{ github.sha }}" "$commit_msg_line")
+          # get commit message from `push` trigger
+          commit_message=$(echo "$commit_message" | head -n 1)
+          message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         elif git rev-parse --is-inside-git-dir > /dev/null 2>&1; then  
-          commit_msg_line=$(git log --format=%B -n 1 | head -n 1)
-          message=$(printf '<https://github.com/%s/commit/%s|%s>' "${{ inputs.repository }}" "${{ github.sha }}" "$commit_msg_line")
+          # get commit message from the current git directory to support `workflow_dispatch` trigger
+          commit_message=$(git log --format=%B -n 1 | head -n 1)
+          message="<https://github.com/${{ inputs.repository }}/commit/${{ github.sha }}|$commit_message>"
         else
           commit_msg_line="Link to the latest commit in the repository"
           message=$(printf '<https://github.com/%s/commit/%s|%s>' "${{ inputs.repository }}" "${{ github.sha }}" "$commit_msg_line")
