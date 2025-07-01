@@ -27,16 +27,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set escaped env variables
-      id: env
-      shell: bash
-      run: |
-        printf 'commit_message<<EOF\n%s\nEOF\n' "${{ github.event.head_commit.message }}" >> $GITHUB_ENV
-        printf 'input_message<<EOF\n%s\nEOF\n' "${{ inputs.message }}" >> $GITHUB_ENV
     - name: Set fields
       shell: bash
       if: always()
       id: fields
+      env:
+        commit_message: ${{ github.event.head_commit.message }}
+        input_message: ${{ inputs.message }}
       run: |
         echo "Made it here!"
         if [ "${{ inputs.status }}" = "success" ]; then
