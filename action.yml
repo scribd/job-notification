@@ -69,10 +69,9 @@ runs:
     - name: Send notification
       if: always()
       uses: slackapi/slack-github-action@v3
-      env:
-        SLACK_BOT_TOKEN: ${{ inputs.token }}
       with:
         method: chat.postMessage
+        token: ${{ inputs.token }}
         payload: |
           {
             "channel": "${{ inputs.channel }}",
