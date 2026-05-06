@@ -68,13 +68,14 @@ runs:
 
     - name: Send notification
       if: always()
-      uses: slackapi/slack-github-action@v1.25.0
+      uses: slackapi/slack-github-action@v3
       env:
         SLACK_BOT_TOKEN: ${{ inputs.token }}
       with:
-        channel-id: ${{ inputs.channel }}
+        method: chat.postMessage
         payload: |
           {
+            "channel": "${{ inputs.channel }}",
             "text": ":${{ steps.fields.outputs.emoji }}: *Workflow <https://github.com/${{ inputs.repository }}/actions/runs/${{ github.run_id }}/|${{ github.workflow }}> ${{ inputs.status }}*",
             "attachments": [
               {
