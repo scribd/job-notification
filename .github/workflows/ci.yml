@@ -3,21 +3,7 @@ name: CI
 on: [push, workflow_dispatch]
 
 jobs:
-  verify-secrets:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Verify SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC is set
-        run: |
-          if [ -z "$TOKEN" ]; then
-            echo "::error::SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC is not set on this repository — add it to repo or org secrets before merging"
-            exit 1
-          fi
-          echo "Secret is set"
-        env:
-          TOKEN: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
-
   test:
-    needs: verify-secrets
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -30,7 +16,6 @@ jobs:
           token: ${{ secrets.SCRIBD_SLACK_GENERIC_TOKEN_PUBLIC }}
           channel: test-release-notification
   test-custom-message:
-    needs: verify-secrets
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -44,7 +29,6 @@ jobs:
           channel: test-release-notification
           message: <https://scribd.com|Custom message>
   test-custom-message-with-special-characters:
-    needs: verify-secrets
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -58,7 +42,6 @@ jobs:
           channel: test-release-notification
           message: <https://scribd.com|Special characters + 'single quote' + "double quotes" + `backtick`>
   test-overwrite-repository:
-    needs: verify-secrets
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -72,7 +55,6 @@ jobs:
           channel: test-release-notification
           repository: scribd/node-chassis
   test-overwrite-status:
-    needs: verify-secrets
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -86,7 +68,6 @@ jobs:
           channel: test-release-notification
           status: failure
   test-overwrite-environment:
-    needs: verify-secrets
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
