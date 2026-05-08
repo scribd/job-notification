@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/scribd/job-notification/compare/v1.3.1...v1.3.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* token passed ([66a86b6](https://github.com/scribd/job-notification/commit/66a86b66caa77603e529dd814aedc747ea0a6e76))
+
 ## [1.3.1](https://github.com/scribd/job-notification/compare/v1.3.0...v1.3.1) (2024-09-18)
 
 
