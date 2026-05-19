@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/scribd/job-notification/compare/v1.3.2...v1.3.3) (2026-05-19)
+
+
+### Bug Fixes
+
+* DEVPLAT-7883 prevent shell injection in Set fields step ([687700a](https://github.com/scribd/job-notification/commit/687700ab5d7ebd2b1b00ce8ddfc2632b3ba86a11))
+
 ## [1.3.2](https://github.com/scribd/job-notification/compare/v1.3.1...v1.3.2) (2026-05-08)
 
 
